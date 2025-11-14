@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RPG Boss Battle</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="game-container">
+      <!-- Background -->
+      <img src="img/bg.jpg" alt="Background" class="bg" />
+
+      <!-- Top HP Bars -->
+      <div class="top-stats">
+        <div class="hp-container player-hp">
+          <span id="playerHPText">100 / 100</span>
+          <div class="hp-bar-container">
+            <div class="hp-bar" id="playerHPBar"></div>
+          </div>
+        </div>
+        <div class="hp-container monster-hp">
+          <span id="monsterHPText">100 / 100</span>
+          <div class="hp-bar-container">
+            <div class="hp-bar" id="monsterHPBar"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Battle Area -->
+      <div class="battle-area">
+        <!-- Player -->
+        <div class="character player">
+          <img id="playerSprite" src="img/player.png" />
+          <div id="playerText" class="float-text"></div>
+        </div>
+
+        <!-- Monster -->
+        <!-- Monster container -->
+        <div class="monster-container">
+          <!-- Typhoon clouds -->
+          <div class="typhoon">
+            <!-- Clouds -->
+            <div class="cloud cloud1"></div>
+            <div class="cloud cloud2"></div>
+            <div class="cloud cloud3"></div>
+            <div class="cloud cloud4"></div>
+            <div class="cloud cloud5"></div>
+            <div class="cloud cloud6"></div>
+            <div class="cloud cloud7"></div>
+            <div class="cloud cloud8"></div>
+            <div class="cloud cloud9"></div>
+            <div class="cloud cloud10"></div>
+
+            <!-- Lightning bolts -->
+            <div class="lightning">
+              <div
+                class="lightning-bolt"
+                style="top: 10%; left: 20%; animation-delay: 0s"
+              ></div>
+              <div
+                class="lightning-bolt"
+                style="top: 15%; left: 50%; animation-delay: 0.2s"
+              ></div>
+              <div
+                class="lightning-bolt"
+                style="top: 5%; left: 70%; animation-delay: 0.4s"
+              ></div>
+              <div
+                class="lightning-bolt"
+                style="top: 25%; left: 30%; animation-delay: 0.1s"
+              ></div>
+              <div
+                class="lightning-bolt"
+                style="top: 40%; left: 60%; animation-delay: 0.3s"
+              ></div>
+              <div
+                class="lightning-bolt"
+                style="top: 30%; left: 10%; animation-delay: 0.5s"
+              ></div>
+              <div
+                class="lightning-bolt"
+                style="top: 50%; left: 80%; animation-delay: 0.6s"
+              ></div>
+              <div
+                class="lightning-bolt"
+                style="top: 60%; left: 45%; animation-delay: 0.7s"
+              ></div>
+              <div
+                class="lightning-bolt"
+                style="top: 35%; left: 55%; animation-delay: 0.9s"
+              ></div>
+              <div
+                class="lightning-bolt"
+                style="top: 20%; left: 75%; animation-delay: 1s"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Monster -->
+          <div class="character monster">
+            <img id="monsterSprite" src="img/monster.png" />
+            <div id="monsterText" class="float-text"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action UI -->
+      <div class="ui">
+        <!-- Agility bar for timing attacks -->
+        <div class="agility-container">
+          <div class="agility-bar" id="agilityBar">
+            <div class="agility-pointer" id="agilityPointer"></div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="buttons">
+          <button id="attackBtn">Attack</button>
+          <button id="healBtn">Heal</button>
+        </div>
+      </div>
+
+      <div class="player-stats">
+        <h3>PLAYER STATS</h3>
+        <p id="playerLevel">LVL: 1</p>
+        <p id="playerXP">XP: 0 / 10</p>
+        <p id="playerAtk">ATK +0</p>
+        <p id="playerHPBonus">HP +0</p>
+      </div>
+
+      <!-- Turn Log -->
+      <div class="turn-log" id="turnLog"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+  </body>
+</html>

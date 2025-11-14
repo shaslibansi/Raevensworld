@@ -1,0 +1,541 @@
+/* === General Reset & Body === */
+body {
+    margin: 0;
+    font-family: 'Press Start 2P', Arial, sans-serif;
+    overflow: hidden;
+    background: #0b0b0b;
+    color: white;
+}
+
+.game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* === Background === */
+.bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    z-index: -2;
+    filter: brightness(0.6) saturate(1.2);
+}
+
+/* === Battle Area === */
+.battle-area {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;  
+    gap: 150px;               
+    height: 100%;
+    perspective: 1200px;
+    position: relative;
+}
+
+/* === Character Images Darkened === */
+.character img {
+    width: 400px;
+    transform: scale(1.2) perspective(1000px) rotateY(0deg);
+    transition: transform 0.3s ease, filter 0.3s ease;
+    position: relative;
+    bottom: 0;
+    filter: brightness(0.55) contrast(1.2) drop-shadow(0 5px 15px rgba(0,0,0,0.5));
+}
+
+.character.player img {
+    transform: scale(1.25) rotateY(-5deg);
+    z-index: 2;
+}
+
+.character.monster img {
+    transform: scale(1.25) rotateY(5deg) translateY(50px); /* shift left */
+    z-index: 1;
+}
+
+
+.character::after {
+    content: '';
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 40px; 
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 80%);
+    filter: blur(8px);
+    z-index: 0;
+}
+
+/* === Character Animations === */
+.player.attack img { 
+    transform: translateX(50px) scale(1.15); 
+    filter: brightness(1.3) drop-shadow(0 0 20px yellow);
+}
+.monster.attack img { 
+    transform: translateX(-50px) scale(1.15); 
+    filter: brightness(1.3) drop-shadow(0 0 20px red);
+}
+.player.hit img, .monster.hit img { 
+    transform: scale(1.1) rotate(-5deg); 
+    filter: brightness(1.5) drop-shadow(0 0 25px red);
+}
+.player.heal img, .monster.heal img { 
+    transform: scale(1.1); 
+    filter: drop-shadow(0 0 20px lime); 
+}
+
+.character.return img {
+    transform: translateX(0) scale(1) rotate(0deg);
+    transition: transform 0.3s ease-out;
+}
+
+/* === Floating Text === */
+.float-text {
+    position: absolute;
+    font-weight: bold;
+    font-family: 'Press Start 2P', sans-serif;
+    opacity: 0;
+    pointer-events: none;
+    text-shadow: 0 0 8px black, 0 0 12px black;
+    animation: floatUp 1s ease-out;
+}
+
+.float-text.crit { 
+    color: orange; 
+    font-size: 36px; 
+    text-shadow: 0 0 15px orange, 0 0 25px yellow; 
+}
+.float-text.ultra { 
+    color: darkred; 
+    font-size: 44px; 
+    text-shadow: 0 0 20px darkred, 0 0 35px red; 
+}
+
+@keyframes floatUp {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    50% { transform: translateY(-20px) scale(1.2); }
+    100% { opacity: 0; transform: translateY(-60px) scale(1.4); }
+}
+
+/* === HP Bars === */
+.top-stats {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 50px;
+    z-index: 100;
+    width: fit-content;
+}
+
+.hp-container {
+    position: relative;
+    width: 390px;
+    height: 60px;
+    background: #222;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 0 8px #000 inset;
+}
+
+.hp-container span {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    font-weight: bold;
+    padding: 1%;
+    line-height: 50px;
+    pointer-events: none;
+    z-index: 10;
+    text-shadow: 0 0 6px black;
+    font-size: 20px;
+}
+
+.hp-bar-container {
+    width: 100%;
+    height: 100%;
+    background: #444;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.hp-bar {
+    width: 100%;
+    height: 100%;
+    background-color: green;
+    transition: width 0.4s ease, background-color 0.3s ease;
+    box-shadow: 0 0 10px #000 inset;
+}
+
+/* === Damage Overlay === */
+.damage-overlay {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    background: rgba(255,0,0,0.8);
+    border-radius: 12px;
+    pointer-events: none;
+    z-index: 5;
+    box-shadow: 0 0 12px red, 0 0 20px rgba(255,0,0,0.6);
+    transition: opacity 1s ease-out;
+}
+
+.damage-overlay.fade-out { opacity: 0; }
+
+/* === Turn Log === */
+#turnLog {
+    position: absolute;
+    top: 290px;
+    left: 20px;
+    width: 280px;
+    height: 20%;
+    overflow-y: scroll;
+    padding: 15px;
+    background: rgba(0,0,0,0.6);
+    border-radius: 12px;
+    font-size: 14px;
+    box-shadow: 0 0 20px black;
+}
+#turnLog::-webkit-scrollbar { display: none; }
+
+.heal-particle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: limegreen;
+    pointer-events: none;
+    z-index: 9999;
+    animation: floatUpFade var(--duration, 1s) forwards ease-out;
+    box-shadow:
+        0 0 5px limegreen,
+        0 0 10px limegreen,
+        0 0 20px limegreen,
+        0 0 30px limegreen;
+}
+
+
+@keyframes floatUpFade {
+    0% {
+        transform: translate(var(--start-x), var(--start-y)) scale(1);
+        opacity: 0.8;
+    }
+    40% {
+        transform: translate(calc(var(--end-x)/2), calc(var(--end-y)/2 + 20px)) scale(1.2); /* slight stop/pause effect */
+        opacity: 0.9;
+    }
+    70% {
+        transform: translate(calc(var(--end-x)*0.75), calc(var(--end-y)*0.75)) scale(1.3);
+        opacity: 0.7;
+    }
+    100% {
+        transform: translate(var(--end-x), var(--end-y)) scale(1.4);
+        opacity: 0;
+    }
+}
+
+
+
+
+/* === Screen Shake === */
+.shake-small {
+    animation: shakeSmall 0.25s cubic-bezier(.36,.07,.19,.97) both;
+}
+.shake-big {
+    animation: shakeBig 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shakeSmall {
+    0%,100% { transform: translate(0,0) rotate(0deg); }
+    10% { transform: translate(2px,-1px) rotate(-1deg); }
+    20% { transform: translate(-2px,1px) rotate(1deg); }
+    30% { transform: translate(1px,-2px) rotate(-1deg); }
+    40% { transform: translate(-1px,2px) rotate(1deg); }
+    50% { transform: translate(2px,0) rotate(0deg); }
+    60% { transform: translate(-2px,0) rotate(-1deg); }
+    70% { transform: translate(1px,1px) rotate(0deg); }
+    80% { transform: translate(-1px,-1px) rotate(1deg); }
+    90% { transform: translate(0,2px) rotate(-1deg); }
+}
+
+@keyframes shakeBig {
+    0%,100% { transform: translate(0,0) rotate(0deg); }
+    10% { transform: translate(-6px,-4px) rotate(-2deg); }
+    20% { transform: translate(6px,4px) rotate(2deg); }
+    30% { transform: translate(-4px,5px) rotate(-1deg); }
+    40% { transform: translate(5px,-5px) rotate(1deg); }
+    50% { transform: translate(-5px,6px) rotate(-2deg); }
+    60% { transform: translate(6px,-4px) rotate(2deg); }
+    70% { transform: translate(-4px,5px) rotate(-1deg); }
+    80% { transform: translate(5px,-6px) rotate(1deg); }
+    90% { transform: translate(-5px,4px) rotate(-2deg); }
+}
+
+/* === UI Buttons & Agility Bar === */
+.ui {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+.buttons button {
+    font-size: 20px;
+    padding: 12px 28px;
+    margin: 0 12px;
+    cursor: pointer;
+    border-radius: 12px;
+    background: linear-gradient(145deg,#333,#111);
+    color: #fff;
+    border: 2px solid #555;
+    text-shadow: 0 0 6px black;
+    box-shadow: 0 0 10px black;
+    transition: transform 0.1s, background 0.2s, box-shadow 0.2s;
+}
+
+.buttons button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(145deg,#555,#222);
+    box-shadow: 0 0 20px yellow;
+}
+
+/* === Agility Bar === */
+.agility-bar {
+    position: relative;
+    width: 320px;
+    height: 30px;
+    background: #111;
+    margin: 20px auto 0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0 10px #000 inset;
+    bottom: 80px;
+}
+
+.agility-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 60px;
+    height: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(90deg, rgba(255,0,0,0.5), rgba(255,255,0,0.3));
+    pointer-events: none;
+    border-radius: 5px;
+}
+
+.agility-pointer {
+    position: absolute;
+    top: 0;
+    width: 6px;
+    height: 100%;
+    background: lime;
+    box-shadow: 0 0 12px lime, 0 0 20px lime;
+    z-index: 10;
+    border-radius: 3px;
+}
+
+.agility-container {
+    position: relative;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+/* Monster container */
+.monster-container {
+    position: relative;
+    display: inline-block;
+}
+
+.typhoon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 500px;
+    height: 500px;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 0; 
+}
+
+/* Base cloud style */
+.cloud {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.15), rgba(255,255,255,0));
+    filter: blur(25px);
+    animation: swirlClouds linear infinite;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+/* 10 clouds with unique size, position, speed */
+.cloud1 { width:120px;height:120px;top:10%; left:15%; animation-duration:20s;}
+.cloud2 { width:180px;height:180px;top:20%; left:60%; animation-duration:25s;}
+.cloud3 { width:150px;height:150px;top:50%; left:10%; animation-duration:18s;}
+.cloud4 { width:200px;height:200px;top:40%; left:70%; animation-duration:22s;}
+.cloud5 { width:130px;height:130px;top:65%; left:35%; animation-duration:20s;}
+.cloud6 { width:170px;height:170px;top:30%; left:40%; animation-duration:28s;}
+.cloud7 { width:140px;height:140px;top:55%; left:55%; animation-duration:24s;}
+.cloud8 { width:160px;height:160px;top:15%; left:45%; animation-duration:26s;}
+.cloud9 { width:110px;height:110px;top:70%; left:20%; animation-duration:19s;}
+.cloud10{ width:190px;height:190px;top:60%; left:65%; animation-duration:30s;}
+
+/* Cloud swirling */
+@keyframes swirlClouds {
+    0%   { transform: translate(0,0) rotate(0deg); }
+    50%  { transform: translate(15px,-10px) rotate(180deg); }
+    100% { transform: translate(0,0) rotate(360deg); }
+}
+
+/* Fog glow */
+.typhoon::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 70%);
+    animation: pulse 3s ease-in-out infinite;
+    z-index: -1;
+}
+@keyframes pulse {
+    0%,100% { opacity: 0.05; }
+    50% { opacity: 0.15; }
+}
+
+/* Lightning flashes*/
+.typhoon::after {
+    content:'';
+    position: absolute;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(255,255,255,0);
+    pointer-events: none;
+    z-index:1;
+    animation: lightningFlash 2s infinite;
+}
+
+@keyframes lightningFlash {
+    0%,95%,100% { background: rgba(255,255,255,0); }
+    96% { background: rgba(255,255,255,0.4); }
+    97% { background: rgba(255,255,255,0); }
+    98% { background: rgba(255,255,255,0.5); }
+    99% { background: rgba(255,255,255,0); }
+}
+
+/* Lightning bolts  */
+.typhoon .lightning {
+    position: absolute;
+    top:0; left:0;
+    width:100%; height:100%;
+    pointer-events: none;
+    z-index:2;
+}
+
+/* Individual lightning bolts */
+.lightning-bolt {
+    position: absolute;
+    width:2px; height:100px;
+    background: white;
+    opacity:0;
+    filter: drop-shadow(0 0 6px white) drop-shadow(0 0 15px #aaf);
+    transform: rotate(0deg);
+    animation: flashBolt 1s infinite;
+}
+
+/* Bolt flicker */
+@keyframes flashBolt {
+    0%,90%,100% { opacity:0; }
+    91% { opacity:1; transform: translateY(-5px) rotate(-10deg); }
+    92% { opacity:0; }
+    93% { opacity:1; transform: translateY(5px) rotate(5deg); }
+    94% { opacity:0; }
+    95% { opacity:1; transform: translateY(-10px) rotate(15deg); }
+    96% { opacity:0; }
+}
+
+
+@keyframes lungeForward {
+    0% { transform: translateX(0) scale(1); }
+    50% { transform: translateX(700px) scale(1.15); } /* forward movement */
+    100% { transform: translateX(0) scale(1); }      /* return */
+}
+
+@keyframes lungeForwardMonster {
+    0% { transform: translateX(0) scale(1); }
+    50% { transform: translateX(-600px) scale(1.15); }
+    100% { transform: translateX(0) scale(1); }
+}
+
+/* Apply hit effect */
+.player.attack img { animation: lungeForward 0.4s ease-out forwards; filter: brightness(1.3) drop-shadow(0 0 20px yellow); }
+.monster.attack img { animation: lungeForwardMonster 0.4s ease-out forwards; filter: brightness(1.3) drop-shadow(0 0 20px red); }
+
+/* === Player Stats Panel === */
+.player-stats {
+    position: absolute;
+    top: 100px;
+    left: 20px;
+    width: 180px;
+    background: rgba(0, 0, 0, 0.6); /* semi-transparent background */
+    padding: 15px;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    color: white;
+    font-family: 'Press Start 2P', Arial, sans-serif;
+    text-align: left;
+    z-index: 20;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+.player-stats h3 {
+    font-size: 14px;
+    margin-bottom: 10px;
+    text-align: center;
+    color: #FFD700; /* golden header */
+    text-shadow: 0 0 4px black;
+}
+
+.player-stats p {
+    font-size: 12px;
+    margin: 4px 0;
+    line-height: 1.4;
+    color: #ffffff;
+    text-shadow: 0 0 2px black;
+}
+
+/* Optional: XP bar inside stats */
+.player-stats #playerXP {
+    position: relative;
+}
+
+.player-stats #playerXP::after {
+    content: '';
+    display: block;
+    height: 4px;
+    width: 100%;
+    background: #444;
+    margin-top: 3px;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.player-stats #playerXP::before {
+    content: '';
+    display: block;
+    height: 4px;
+    width: 0%; /* dynamically updated by JS */
+    background: #00FF00; /* green XP fill */
+    position: absolute;
+    left: 0;
+    bottom: 4px;
+    border-radius: 2px;
+}
